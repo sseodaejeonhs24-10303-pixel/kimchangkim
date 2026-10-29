@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>챙김 · 나의 대학생활</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f7f8fc;color:#29354c;font:14px "Malgun Gothic",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:1px solid #e2e7f0;background:white;color:inherit;padding:10px 14px;border-radius:9px}
+button:hover{background:#eef2ff}
+button:focus-visible,a:focus-visible{outline:3px solid #8da8ff;outline-offset:3px}
+a{color:#365fe9}
+aside{position:fixed;width:230px;inset:0 auto 0 0;background:white;border-right:1px solid #e6eaf2;padding:32px 18px;display:flex;flex-direction:column}
+.brand{font-size:29px;font-weight:bold;margin:0 12px 35px}
+.brand b{background:#365fe9;color:white;border-radius:11px;padding:1px 8px}
+.brand small{display:block;color:#99a3b7;font-size:9px;letter-spacing:2px;margin:12px 0}
+nav{display:grid;gap:6px}
+nav button{border:0;text-align:left;color:#7d879b;padding:14px;position:relative}
+nav button.active{color:#365fe9;background:#edf2ff;font-weight:bold}
+.badge{float:right;background:#ed6576;border-radius:20px;color:white;padding:2px 6px;font-size:10px}
+.sidefoot{margin-top:auto;font-size:11px;color:#8a95a8;line-height:1.9}
+main{margin-left:230px;padding:0 40px;max-width:1500px}
+header{height:88px;border-bottom:1px solid #e6eaf2;display:flex;align-items:center;justify-content:space-between;color:#8b96aa;font-size:12px}
+.primary{background:#365fe9;color:white;border-color:#365fe9}
+.primary:hover{background:#284bc4}
+h1{font-size:28px;margin:32px 0 10px;letter-spacing:-1px}
+h2{font-size:17px;margin:0}
+p{line-height:1.8;color:#8a94a7}
+.hero{background:#eaf0ff;border-radius:16px;padding:28px 30px;margin:26px 0;color:#304774;font-size:21px;line-height:1.7}
+.hero small{display:block;font-size:12px;color:#7c8fb6;margin-top:8px}
+.grid{display:grid;grid-template-columns:1.7fr 1fr;gap:22px}
+.panel{border:1px solid #e5e9f2;background:white;padding:24px;border-radius:14px;margin:20px 0}
+.head,.tools{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.tools{justify-content:flex-start;flex-wrap:wrap;margin:20px 0}
+.grow{flex:1}
+.muted{color:#929caf;font-size:12px}
+.task{display:flex;align-items:center;gap:12px;padding:16px 0;border-bottom:1px solid #eef1f6}
+.task:last-child{border:0}
+.task input{width:19px;height:19px;accent-color:#365fe9}
+.task button{border:0;padding:0;background:none;text-align:left}
+.task .body{flex:1;min-width:0}
+.task small{display:block;color:#929caf;font-size:11px;margin-top:7px}
+.done .name{color:#9ba5b5}
+.pill{display:inline-block;background:#edf2ff;color:#5c77b4;border-radius:6px;padding:4px 8px;font-size:11px}
+.warn{background:#fff2e4;color:#b17d44}
+.empty{text-align:center;padding:35px 10px;color:#99a2b4;line-height:2}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1px solid #edf0f5;border-top:1px solid #edf0f5}
+.day{min-height:95px;border-radius:0;border:0;border-right:1px solid #edf0f5;border-bottom:1px solid #edf0f5;text-align:left;padding:8px;overflow:hidden}
+.day small{display:block;background:#edf2ff;color:#5b77b6;padding:3px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px}
+.day.selected{background:#eef3ff}
+.day.today{color:#365fe9;font-weight:bold}
+.outside{color:#bec5d3;background:#fbfcff}
+.weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;color:#99a3b4;padding:14px 0;font-size:11px}
+.mini .day{min-height:35px;text-align:center;padding:8px;border:0}
+.mini .cal{border:0}
+.week{display:grid;grid-template-columns:repeat(7,minmax(130px,1fr));gap:10px;overflow:auto}
+.week .panel{padding:15px;min-height:230px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.cards .panel{margin:0}
+.note{cursor:pointer;min-height:170px;background:#fffef9;text-align:left;width:100%}
+.note p{white-space:pre-wrap;max-height:160px;overflow:hidden;font-size:13px}
+blockquote{background:#f6f8fc;margin:16px 0;border-left:2px solid #b7c8ef;padding:12px;color:#808da3;white-space:pre-wrap;line-height:1.8;font-size:12px}
+.info{background:#edf2fc;padding:16px;border-radius:9px;color:#7484a2;font-size:12px;line-height:1.9}
+.dday{padding:16px 0;border-bottom:1px solid #edf0f5;display:flex;gap:16px;align-items:center}
+.dday strong{color:#365fe9;font-size:20px;min-width:60px}
+footer{border-top:1px solid #e6eaf2;color:#a2abba;font-size:11px;padding:25px 0;margin-top:35px}
+dialog{border:0;border-radius:16px;width:min(520px,94vw);padding:26px;box-shadow:0 20px 100px #23345430}
+dialog::backdrop{background:#26375066;backdrop-filter:blur(3px)}
+label{display:block;color:#7d899e;font-size:12px;margin:16px 0 7px}
+input:not([type=checkbox]),textarea,select{width:100%;padding:11px;border:1px solid #dfe5ef;border-radius:8px;background:white;color:#35425b}
+textarea{resize:vertical;min-height:120px}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:22px}
+.danger{color:#b26775}
+#toast{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2e3d59;color:white;padding:13px 22px;border-radius:10px;z-index:10}
+@media(max-width:950px){
+ aside{width:190px}
+ main{margin-left:190px;padding:0 24px}
+ .grid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+ aside{position:relative;width:100%;padding:20px 18px 8px;border:0}
+ .brand{font-size:25px;margin:0}
+ .brand small,.sidefoot{display:none}
+ nav{display:flex;overflow:auto;margin-top:18px;padding-bottom:8px}
+ nav button{white-space:nowrap;font-size:12px;padding:10px}
+ .badge{margin-left:6px}
+ main{margin:0;padding:0 18px}
+ header{height:66px}
+ h1{font-size:25px}
+ .hero{font-size:18px;padding:23px}
+ .panel{padding:18px}
+ .day{min-height:75px;padding:5px}
+ .day small{font-size:9px}
+ .tools button{padding:8px}
+}
+</style>
+</head>
+<body>
+<aside>
+ <div class="brand">
+  <b>✓</b> 챙김
+  <small>CAMPUS COMPANION</small>
+ </div>
+ <nav id="nav"></nav>
+ <div class="sidefoot">
+  ● 이 브라우저에 저장<br>
+  개인 기록은 정기적으로 백업해 주세요.
+ </div>
+</aside>
+
+<main>
+ <header>
+  <span id="crumb"></span>
+  <button class="primary" data-action="add">＋ 새로 추가</button>
+ </header>
+ <div id="view"></div>
+ <footer>하나씩 챙기면 충분해요. · CHAENGGIM</footer>
+</main>
+
+<dialog id="modal">
+ <form id="form">
+  <div class="head">
+   <h2 id="formTitle"></h2>
+   <button type="button" data-action="close" aria-label="닫기">✕</button>
+  </div>
+  <div id="fields"></div>
+  <div class="actions">
+   <button type="button" data-action="close">취소</button>
+   <button class="primary">저장하기</button>
+  </div>
+ </form>
+</dialog>
+
+<input id="importFile" type="file" accept="application/json" hidden>
+<div id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const KEY='chaenggim-notepad-v1';
+
+const E=s=>String(s??'').replace(/[&<>"']/g,c=>({
+ '&':'&amp;',
+ '<':'&lt;',
+ '>':'&gt;',
+ '"':'&quot;',
+ "'":'&#39;'
+}[c]));
+
+const dateKey=(d=new Date())=>
+ `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+const fresh=()=>({
+ tasks:[],
+ notes:[],
+ notices:[],
+ sources:[],
+ seen:{}
+});
+
+let db=fresh();
+
+try{
+ const x=JSON.parse(localStorage.getItem(KEY));
+ if(x&&['tasks','notes','notices','sources'].every(k=>Array.isArray(x[k]))){
+  db={...fresh(),...x};
+ }
+}catch{}
+
+let page='today';
+let selected=dateKey();
+let month=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let weekOffset=0;
+let filter='전체';
+let editing=null;
+let kind='task';
+
+const menus=[
+ ['today','☀ 오늘'],
+ ['week','▤ 이번 주'],
+ ['calendar','▦ 캘린더'],
+ ['notes','▧ 메모장'],
+ ['review','◇ 확인 필요'],
+ ['scholarships','♧ 장학금'],
+ ['activities','↗ 대외활동·국제교류'],
+ ['notices','▱ 공지함'],
+ ['settings','⚙ 설정']
+];
+
+const groups=[
+ '일반','장학금','해외봉사','교환학생','국내봉사','인턴','기타 활동'
+];
+
+function save(){
+ try{
+  localStorage.setItem(KEY,JSON.stringify(db));
+  return true;
+ }catch{
+  toast('저장할 공간이 부족하거나 브라우저 저장이 차단됐어요. 백업을 내보내 주세요.');
+  return false;
+ }
+}
+
+function toast(s){
+ $('#toast').textContent=s;
+ $('#toast').style.display='block';
+ clearTimeout(window.toastTimer);
+ window.toastTimer=setTimeout(()=>{
+  $('#toast').style.display='none';
+ },3000);
+}
+
+function label(d){
+ return d
+  ?new Date(d+'T00:00:00').toLocaleDateString(
+    'ko-KR',{month:'long',day:'numeric',weekday:'short'}
+   )
+  :'날짜 미정';
+}
+
+function dday(d){
+ if(!d)return '날짜 미정';
+ const n=Math.round(
+  (new Date(d+'T00:00:00')-
+   new Date(dateKey()+'T00:00:00'))/86400000
+ );
+ return n===0?'D-day':n>0?'D−'+n:'D+'+Math.abs(n);
+}
+
+function button(text,action,id='',extra=''){
+ return `<button data-action="${action}"
+ data-id="${E(id)}" ${extra}>${text}</button>`;
+}
+
+function relevant(p){
+ return db.notices.filter(n=>
+  p==='notices'||
+  p==='review'&&n.uncertain||
+  p==='scholarships'&&n.category==='장학금'||
+  p==='activities'&&!['일반','장학금'].includes(n.category)
+ );
+}
+
+function tasks(items){
+ if(!items.length){
+  return '<div class="empty">✓<br>지금은 등록된 할 일이 없어요.</div>';
+ }
+
+ return [...items]
+ .sort((a,b)=>
+  Number(a.done)-Number(b.done)||
+  (a.date||'9999').localeCompare(b.date||'9999')||
+  (a.time||'').localeCompare(b.time||'')
+ )
+ .map(t=>`
+ <div class="task ${t.done?'done':''}">
+  <input type="checkbox"
+   data-action="done"
+   data-id="${E(t.id)}"
+   ${t.done?'checked':''}
+   aria-label="${E(t.title)} 완료">
+  <div class="body">
+   ${button(E(t.title),'edit-task',t.id,'class="name"')}
+   <small>
+    ${label(t.date)} ${E(t.time||'')} · ${E(t.kind||'할 일')}
+   </small>
+  </div>
+  <span class="pill ${
+   t.date&&t.date<dateKey()&&!t.done?'warn':''
+  }">${dday(t.date)}</span>
+ </div>`).join('');
+}
+
+function calendar(mini=false){
+ const y=month.getFullYear();
+ const m=month.getMonth();
+ const start=new Date(y,m,1);
+ start.setDate(1-start.getDay());
+
+ return `
+ <div class="${mini?'mini':''}">
+  <div class="head">
+   <h2>${y}년 ${m+1}월</h2>
+   <div>
+    ${button('‹','month','-1','aria-label="이전 달"')}
+    ${button('›','month','1','aria-label="다음 달"')}
+   </div>
+  </div>
+  <div class="weekdays">
+   ${['일','월','화','수','목','금','토']
+    .map(s=>`<span>${s}</span>`).join('')}
+  </div>
+  <div class="cal">
+   ${Array.from({length:42},(_,i)=>{
+    const d=new Date(start);
+    d.setDate(d.getDate()+i);
+    const key=dateKey(d);
+    const list=db.tasks.filter(t=>t.date===key);
+
+    const contents=d.getDate()+(
+     !mini
+     ?list.slice(0,2).map(t=>
+       `<small>${t.done?'✓ ':''}${E(t.title)}</small>`
+      ).join('')+
+      (list.length>2?`<small>+${list.length-2}개</small>`:'')
+     :''
+    );
+
+    return button(contents,'date',key,`
+     class="day
+      ${d.getMonth()!==m?'outside':''}
+      ${key===selected?'selected':''}
+      ${key===dateKey()?'today':''}"
+    `);
+   }).join('')}
+  </div>
+ </div>`;
+}
+
+function heading(title,description){
+ return `<h1>${title}</h1><p>${description}</p>`;
+}
+
+function render(){
+ const draft=$('#quicknote')?.value||'';
+
+ $('#nav').innerHTML=menus.map(([p,title])=>{
+  const count=[
+   'notices','review','scholarships','activities'
+  ].includes(p)
+   ?relevant(p).filter(n=>n.updated>(db.seen[p]||0)).length
+   :0;
+
+  return button(
+   title+(count
+    ?`<span class="badge">${count>99?'99+':count}</span>`
+    :''),
+   'nav',p,`class="${page===p?'active':''}"`
+  );
+ }).join('');
+
+ $('#crumb').textContent=
+  '나의 공간 / '+menus.find(m=>m[0]===page)[1].slice(2);
+
+ let h='';
+
+ if(page==='today'){
+  const due=db.tasks.filter(t=>t.date===dateKey());
+  const late=db.tasks.filter(t=>
+   t.date&&t.date<dateKey()&&!t.done
+  );
+  const pins=db.tasks.filter(t=>
+   t.pin&&!t.done&&t.date
+  ).sort((a,b)=>a.date.localeCompare(b.date));
+
+  h=heading(
+   '오늘도, 하나씩 챙겨요.',
+   label(dateKey())+' · 나만의 속도로 보내는 하루'
+  )+`
+  <div class="hero">
+   오늘 챙길 일이 ${due.filter(t=>!t.done).length}개 있어요.<br>
+   작은 실천이 모여 좋은 하루가 돼요.
+   <small>
+    해야 할 일은 이곳에, 생각은 메모장에 담아두세요.
+   </small>
+  </div>
+  <div class="grid">
+   <div>
+    <section class="panel">
+     <div class="head">
+      <h2>오늘 할 일</h2>
+      ${button('＋ 할 일','add')}
+     </div>
+     ${tasks(due)}
+    </section>
+    ${late.length?`
+     <section class="panel">
+      <h2>아직 남은 할 일</h2>
+      ${tasks(late)}
+     </section>`:''}
+    <section class="panel">
+     <h2>빠르게 메모하기</h2>
+     <p>잊기 전에 남겨요.</p>
+     <textarea id="quicknote"
+      placeholder="문득 떠오른 생각, 챙겨야 할 준비물…"></textarea>
+     <div class="actions">
+      ${button('메모장에 저장 ↗','quick-note')}
+     </div>
+    </section>
+   </div>
+   <div>
+    <section class="panel">${calendar(true)}</section>
+    <section class="panel">
+     <h2>기다리는 날들</h2>
+     ${pins.length
+      ?pins.map(t=>`
+       <div class="dday">
+        <strong>${dday(t.date)}</strong>
+        <div>
+         ${E(t.title)}
+         <p class="muted">${label(t.date)}</p>
+        </div>
+       </div>`).join('')
+      :'<div class="empty">할 일의 D-day 고정을 켜보세요.</div>'}
+    </section>
+   </div>
+  </div>`;
+ }
+
+ if(page==='calendar'){
+  h=heading(
+   '캘린더','한 달의 흐름과 날짜별 할 일을 살펴보세요.'
+  )+`
+  <div class="tools">
+   ${button('오늘','go-today')}
+   ${button('주간 보기','nav','week')}
+   ${button(
+    '날짜 미정 '+db.tasks.filter(t=>!t.date&&!t.done).length,
+    'nav','review'
+   )}
+  </div>
+  <section class="panel">${calendar()}</section>
+  <section class="panel">
+   <div class="head">
+    <h2>${label(selected)}</h2>
+    ${button('＋ 일정 추가','add')}
+   </div>
+   ${tasks(db.tasks.filter(t=>t.date===selected))}
+  </section>`;
+ }
+
+ if(page==='week'){
+  const start=new Date(dateKey()+'T00:00:00');
+  start.setDate(
+   start.getDate()-((start.getDay()+6)%7)+weekOffset*7
+  );
+
+  h=heading(
+   '이번 주','요일별로 할 일을 차분하게 정리해요.'
+  )+`
+  <div class="tools">
+   ${button('‹ 이전 주','week','-1')}
+   ${button('이번 주','week','0')}
+   ${button('다음 주 ›','week','1')}
+  </div>
+  <div class="week">
+   ${Array.from({length:7},(_,i)=>{
+    const d=new Date(start);
+    d.setDate(d.getDate()+i);
+    const key=dateKey(d);
+    return `
+    <section class="panel">
+     <h2>${label(key)}</h2>
+     ${tasks(db.tasks.filter(t=>t.date===key))}
+     ${button('＋ 추가','add-date',key)}
+    </section>`;
+   }).join('')}
+  </div>`;
+ }
+
+ if(page==='notes'){
+  h=heading('메모장','생각을 가볍게 꺼내 놓는 공간.')+`
+  <div class="tools">${button('＋ 새 메모','add-note')}</div>
+  <div class="cards">
+   ${db.notes.map(n=>`
+    <button class="panel note"
+     data-action="edit-note" data-id="${E(n.id)}">
+     <h2>${E(n.title||'제목 없는 메모')}</h2>
+     <p>${E(n.body)}</p>
+     <span class="muted">
+      ${n.date?label(n.date)+' · ':''}
+      ${new Date(n.updated).toLocaleDateString('ko-KR')}
+     </span>
+    </button>
+   `).join('')}
+  </div>
+  ${db.notes.length?'':`
+   <section class="panel empty">
+    첫 번째 생각을 남겨보세요.
+   </section>`}`;
+ }
+
+ if([
+  'notices','review','scholarships','activities'
+ ].includes(page)){
+  const ns=relevant(page).filter(n=>
+   filter==='전체'||n.category===filter
+  );
+
+  h=heading(
+   menus.find(m=>m[0]===page)[1].slice(2),
+   '필요한 소식과 기회를 모아두세요.'
+  )+`
+  <div class="info">
+   이 한 파일 버전은 소식을 직접 등록하는 방식이에요.
+   자동 수집은 기존 온라인 챙김에서 사용해 주세요.
+  </div>
+  <div class="tools">
+   ${page==='activities'
+    ?['전체','해외봉사','교환학생','국내봉사','인턴','기타 활동']
+     .map(f=>button(
+      f,'filter',f,`class="${filter===f?'primary':''}"`
+     )).join('')
+    :''}
+   <span class="grow"></span>
+   ${button('＋ 소식 등록','add-notice')}
+  </div>
+  <div class="cards">
+   ${ns.map(n=>`
+    <section class="panel">
+     <span class="pill">${E(n.category)}</span>
+     ${n.uncertain
+      ?'<span class="pill warn">확인 필요</span>'
+      :''}
+     <h2 style="margin-top:15px">${E(n.title)}</h2>
+     <p class="muted">
+      ${E(n.source||'직접 등록')} · ${label(n.date)}
+      ${n.date?'· '+dday(n.date):''}
+     </p>
+     <blockquote>
+      ${E(n.quote||'등록한 근거 문장이 없어요.')}
+     </blockquote>
+     <div class="tools">
+      ${n.url?`
+       <a href="${E(n.url)}" target="_blank"
+        rel="noopener noreferrer">원문 보기 ↗</a>`:''}
+      ${button('할 일에 추가','notice-task',n.id)}
+      ${button('수정','edit-notice',n.id)}
+     </div>
+    </section>
+   `).join('')}
+  </div>
+  ${ns.length?'':`
+   <section class="panel empty">
+    등록된 소식이 없어요.
+   </section>`}
+  ${page==='review'?`
+   <section class="panel">
+    <h2>날짜 미정인 할 일</h2>
+    ${tasks(db.tasks.filter(t=>!t.date&&!t.done))}
+   </section>`:''}`;
+ }
+
+ if(page==='settings'){
+  h=heading(
+   '설정','기록을 저장하고 다른 기기로 옮겨보세요.'
+  )+`
+  <section class="panel">
+   <h2>이 파일의 저장 방식</h2>
+   <p>
+    기록은 현재 브라우저에 저장돼요.
+    브라우저 기록을 지우거나 파일 위치·브라우저를 바꾸면
+    기존 기록이 보이지 않을 수 있어요.
+    중요한 기록은 백업해 주세요.
+   </p>
+   <div class="tools">
+    ${button('백업 내보내기','export')}
+    ${button('백업 가져오기','import')}
+   </div>
+  </section>
+  <section class="panel">
+   <div class="head">
+    <h2>학교·기관 주소 보관</h2>
+    ${button('＋ 주소 추가','add-source')}
+   </div>
+   <p>
+    이 파일에서는 주소를 보관하고 원문을 열 수 있어요.
+    자동 연결·수집 기능은 포함되어 있지 않아요.
+   </p>
+   ${db.sources.map(s=>`
+    <div class="task">
+     <div class="body">
+      <b>${E(s.title)}</b>
+      <p>
+       <a href="${E(s.url)}" target="_blank"
+        rel="noopener noreferrer">게시판 열기 ↗</a>
+      </p>
+     </div>
+     ${button('삭제','delete-source',s.id)}
+    </div>
+   `).join('')}
+  </section>
+  <section class="panel">
+   <h2>온라인 챙김과 갤럭시 위젯</h2>
+   <p>
+    서버 수집·계정 동기화·갤럭시 위젯은 별도의 온라인 앱과
+    설치 앱에서 사용해 주세요.
+   </p>
+   <a
+    href="https://chaenggim-campus-desk.workspace-439077.chatgpt.site"
+    target="_blank" rel="noopener noreferrer">
+    온라인 챙김 열기 ↗
+   </a>
+  </section>`;
+ }
+
+ $('#view').innerHTML=h;
+ if(draft&&$('#quicknote'))$('#quicknote').value=draft;
+}
+
+function field(title,name,type,value='',required=false){
+ return `
+ <label for="f-${name}">${title}</label>
+ <input id="f-${name}" name="${name}" type="${type}"
+  value="${E(value)}" ${required?'required':''}>`;
+}
+
+function openEditor(type='task',id=null){
+ kind=type;
+ editing=id;
+
+ const key={
+  task:'tasks',note:'notes',notice:'notices',source:'sources'
+ }[type];
+
+ const x=db[key].find(n=>n.id===id)||{};
+
+ $('#formTitle').textContent=
+  (id?'수정 · ':'새로 추가 · ')+{
+   task:'할 일',note:'메모',notice:'소식',source:'출처'
+  }[type];
+
+ let f=field('제목','title','text',x.title,true);
+
+ if(type==='task'){
+  f+=field(
+   '날짜 · 비워두면 날짜 미정',
+   'date','date',
+   x.date??(
+    page==='calendar'||page==='week'?selected:dateKey()
+   )
+  )+
+  field('시간 (선택)','time','time',x.time)+`
+  <label>종류</label>
+  <select name="kind">
+   ${[
+    '할 일','과제 제출','시험','일정','장학금 신청','활동 신청'
+   ].map(v=>
+    `<option ${v===x.kind?'selected':''}>${v}</option>`
+   ).join('')}
+  </select>
+  <label>
+   <input name="pin" type="checkbox" ${x.pin?'checked':''}>
+   D-day 고정
+  </label>
+  <label>메모</label>
+  <textarea name="body">${E(x.body||'')}</textarea>`;
+ }
+
+ if(type==='note'){
+  f+=`
+  <label>내용</label>
+  <textarea name="body">${E(x.body||'')}</textarea>
+  `+field('연결할 날짜 (선택)','date','date',x.date);
+ }
+
+ if(type==='notice'){
+  f+=`
+  <label>분류 · 자동은 제목의 관련 단어로 판단</label>
+  <select name="category">
+   <option value="자동">자동</option>
+   ${groups.map(g=>`
+    <option ${
+     g===(
+      x.category||(
+       page==='scholarships'?'장학금':
+       page==='activities'?'해외봉사':''
+      )
+     )?'selected':''
+    }>${g}</option>
+   `).join('')}
+  </select>
+  `+
+  field('확인한 날짜·마감','date','date',x.date)+
+  field('기관·출처','source','text',x.source)+
+  field('원문 주소 (선택)','url','url',x.url)+`
+  <label>근거 문장</label>
+  <textarea name="quote">${E(x.quote||'')}</textarea>
+  <label>
+   <input type="checkbox" name="uncertain"
+    ${x.uncertain?'checked':''}>
+   날짜·조건 확인 필요
+  </label>`;
+ }
+
+ if(type==='source'){
+  f+=field('게시판 주소','url','url',x.url,true);
+ }
+
+ if(id){
+  f+=button(
+   '삭제하기','delete',id,
+   'type="button" class="danger" style="margin-top:18px"'
+  );
+ }
+
+ $('#fields').innerHTML=f;
+ $('#modal').showModal();
+}
+
+function classify(title){
+ return /장학/.test(title)?'장학금':
+  /교환학생/.test(title)?'교환학생':
+  /해외.*봉사/.test(title)?'해외봉사':
+  /봉사/.test(title)?'국내봉사':
+  /인턴/.test(title)?'인턴':'일반';
+}
+
+$('#form').addEventListener('submit',e=>{
+ e.preventDefault();
+
+ const data=Object.fromEntries(new FormData(e.target));
+ data.title=data.title.trim();
+ if(!data.title)return;
+
+ if(data.url&&!/^https?:\/\//i.test(data.url)){
+  toast('http 또는 https 주소를 입력해 주세요.');
+  return;
+ }
+
+ if(data.category==='자동'){
+  data.category=classify(data.title);
+ }
+
+ data.pin=!!e.target.elements.pin?.checked;
+ data.uncertain=!!e.target.elements.uncertain?.checked;
+
+ const key={
+  task:'tasks',note:'notes',notice:'notices',source:'sources'
+ }[kind];
+
+ const x=db[key].find(n=>n.id===editing);
+
+ if(x){
+  Object.assign(x,data,{updated:Date.now()});
+ }else{
+  db[key].unshift({
+   ...data,
+   id:crypto.randomUUID(),
+   done:false,
+   updated:Date.now()
+  });
+ }
+
+ save();
+ $('#modal').close();
+ render();
+ toast('저장했어요');
+});
+
+function navigate(p){
+ page=p;
+ filter='전체';
+
+ if([
+  'review','notices','scholarships','activities'
+ ].includes(p)){
+  db.seen[p]=Date.now();
+  save();
+ }
+
+ render();
+}
+
+document.addEventListener('click',e=>{
+ const el=e.target.closest('[data-action]');
+ if(!el)return;
+
+ const a=el.dataset.action;
+ const id=el.dataset.id;
+
+ if(a==='nav')navigate(id);
+ if(a==='close')$('#modal').close();
+
+ if(a==='add'){
+  openEditor(
+   page==='notes'?'note':
+   page==='settings'?'source':
+   ['notices','review','scholarships','activities'].includes(page)
+    ?'notice':'task'
+  );
+ }
+
+ if(a==='add-date'){
+  selected=id;
+  openEditor('task');
+ }
+
+ if(
+  a.startsWith('add-')&&
+  ['note','notice','source'].includes(a.slice(4))
+ ){
+  openEditor(a.slice(4));
+ }
+
+ if(a.startsWith('edit-')){
+  openEditor(a.slice(5),id);
+ }
+
+ if(a==='done'){
+  const t=db.tasks.find(t=>t.id===id);
+  if(t){
+   t.done=el.checked;
+   t.updated=Date.now();
+   save();
+   render();
+  }
+ }
+
+ if(a==='month'){
+  month.setMonth(month.getMonth()+Number(id));
+  render();
+ }
+
+ if(a==='date'){
+  selected=id;
+  navigate('calendar');
+ }
+
+ if(a==='go-today'){
+  selected=dateKey();
+  month=new Date(
+   new Date().getFullYear(),new Date().getMonth(),1
+  );
+  render();
+ }
+
+ if(a==='week'){
+  weekOffset=id==='0'?0:weekOffset+Number(id);
+  render();
+ }
+
+ if(a==='filter'){
+  filter=id;
+  render();
+ }
+
+ if(a==='quick-note'){
+  const body=$('#quicknote').value.trim();
+  if(!body)return;
+
+  db.notes.unshift({
+   id:crypto.randomUUID(),
+   title:body.split('\n')[0].slice(0,45),
+   body,
+   updated:Date.now(),
+   date:''
+  });
+
+  save();
+  $('#quicknote').value='';
+  toast('메모장에 저장했어요');
+ }
+
+ if(a==='notice-task'){
+  const n=db.notices.find(n=>n.id===id);
+
+  if(db.tasks.some(t=>t.noticeId===id)){
+   toast('이미 할 일에 추가했어요.');
+   return;
+  }
+
+  db.tasks.unshift({
+   id:crypto.randomUUID(),
+   noticeId:id,
+   title:n.title,
+   date:n.uncertain?'':n.date,
+   done:false,
+   pin:false,
+   kind:n.category==='장학금'?'장학금 신청':'할 일',
+   body:n.quote,
+   updated:Date.now()
+  });
+
+  save();
+  toast('할 일에 추가했어요');
+  render();
+ }
+
+ if(a==='delete'&&confirm('이 항목을 삭제할까요?')){
+  const k={
+   task:'tasks',note:'notes',notice:'notices',source:'sources'
+  }[kind];
+
+  db[k]=db[k].filter(x=>x.id!==id);
+  save();
+  $('#modal').close();
+  render();
+ }
+
+ if(
+  a==='delete-source'&&confirm('등록한 주소를 삭제할까요?')
+ ){
+  db.sources=db.sources.filter(x=>x.id!==id);
+  save();
+  render();
+ }
+
+ if(a==='export'){
+  const url=URL.createObjectURL(
+   new Blob([JSON.stringify(db,null,2)],{
+    type:'application/json'
+   })
+  );
+
+  const link=document.createElement('a');
+  link.href=url;
+  link.download='챙김-백업-'+dateKey()+'.json';
+  link.click();
+
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+ }
+
+ if(a==='import')$('#importFile').click();
+});
+
+$('#importFile').addEventListener('change',async e=>{
+ const file=e.target.files[0];
+ if(!file)return;
+
+ try{
+  const x=JSON.parse(await file.text());
+
+  for(const k of ['tasks','notes','notices','sources']){
+   if(!Array.isArray(x[k]))throw Error();
+
+   for(const n of x[k]){
+    if(
+     !n||
+     typeof n.id!=='string'||
+     typeof n.title!=='string'
+    )throw Error();
+
+    if(n.url&&!/^https?:\/\//i.test(n.url))throw Error();
+
+    if(
+     n.date&&!/^\d{4}-\d{2}-\d{2}$/.test(n.date)
+    )throw Error();
+   }
+  }
+
+  for(const k of ['tasks','notes','notices','sources']){
+   const map=new Map(db[k].map(n=>[n.id,n]));
+
+   for(const n of x[k]){
+    if(
+     !map.has(n.id)||
+     (n.updated||0)>(map.get(n.id).updated||0)
+    ){
+     map.set(n.id,n);
+    }
+   }
+
+   db[k]=[...map.values()];
+  }
+
+  save();
+  render();
+  toast('백업을 가져왔어요.');
+ }catch{
+  toast('올바른 챙김 백업 파일인지 확인해 주세요.');
+ }
+
+ e.target.value='';
+});
+
+window.addEventListener('beforeunload',e=>{
+ if($('#modal').open){
+  e.preventDefault();
+  e.returnValue='';
+ }
+});
+
+render();
+</script>
+</body>
+</html>
